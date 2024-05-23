@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Marking will be based upon producing a readable, well engineered solution rather than factors
@@ -48,7 +48,6 @@ public class DateSorter {
      */
     public Collection<LocalDate> sortDates(List<LocalDate> unsortedDates) {
         Map<Boolean, List<LocalDate>> listMap = getFilteredListMap(unsortedDates);
-
         return getSortedLocalDates(listMap);
     }
 
@@ -62,21 +61,16 @@ public class DateSorter {
     }
 
     private Collection<LocalDate> getSortedLocalDates(Map<Boolean, List<LocalDate>> listMap) {
-        Collection<LocalDate> listDateWithR = sortedListDateByKey(true, listMap.get(true));
-        Collection<LocalDate> listDateWithoutR = sortedListDateByKey(false, listMap.get(false));
-        listDateWithR.addAll(listDateWithoutR);
-        return listDateWithR;
+        return Stream.concat(
+                        sortedListDateByKey(true, listMap.get(true)).stream(),
+                        sortedListDateByKey(false, listMap.get(false)).stream()
+                )
+                .collect(Collectors.toList());
     }
 
     private Collection<LocalDate> sortedListDateByKey(Boolean key, List<LocalDate> unsortedDates) {
         return unsortedDates.stream()
                 .sorted(key ? Comparator.naturalOrder() : Comparator.reverseOrder())
                 .collect(Collectors.toList());
-    }
-
-    private Collection<LocalDate> sortedListDateByKey(Map<Boolean, List<LocalDate>> unsortedDates) {
-        return unsortedDates.entrySet().stream()
-                .map(m -> m.getKey() ? m.getValue().stream().sorted() : m.getValue().stream().sorted(Comparator.reverseOrder()))
-                .collect(Collectors.flatMapping(Function.identity(), Collectors.toList()));
     }
 }
