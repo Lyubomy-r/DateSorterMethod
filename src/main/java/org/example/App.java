@@ -18,7 +18,7 @@ public class App
                 LocalDate.of(2024, 1, 1),
                 LocalDate.of(2000, 10, 1)
         );
-//4 239
+
         DateSorter dateSorter = new DateSorter();
         System.out.println(dateSorter.sortDates(unsortedDates));
 
