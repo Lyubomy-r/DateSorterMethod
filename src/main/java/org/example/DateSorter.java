@@ -57,7 +57,7 @@ public class DateSorter {
     }
 
     private static Predicate<LocalDate> getLocalDatePredicate() {
-        return s -> s.getMonth().toString().toLowerCase().contains("r");
+        return localDate -> localDate.getMonth().toString().toLowerCase().contains("r");
     }
 
     private Collection<LocalDate> getSortedLocalDates(Map<Boolean, List<LocalDate>> listMap) {
